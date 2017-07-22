@@ -7,32 +7,33 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fdp2.domain.Usuario;
 
-@Repository //avia o spring para controlar a classe
+@Repository //avisa o spring para controlar a classe
 public class UsuarioDao {
 	
 	@PersistenceContext //Passa a resp de instacia para o spring
 	EntityManager em;
 
+	public UsuarioDao(){}
+	
 	public UsuarioDao(EntityManager em) {
 		this.em = em;
 	}
-
+	
+	@Transactional	//passa para o spring o controle de instancia de manager
 	public void cadastrar(Usuario usu) {
 
-		em.getTransaction().begin();
 		em.merge(usu);
-		em.getTransaction().commit();
 
 	}
 
+	@Transactional
 	public void excluir(Usuario usu) {
 
-		em.getTransaction().begin();
 		em.remove(usu);
-		em.getTransaction().commit();
 	}
 
 	public Usuario buscarPorId(Integer id) {

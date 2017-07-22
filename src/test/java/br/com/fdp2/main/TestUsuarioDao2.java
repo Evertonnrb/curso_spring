@@ -1,50 +1,33 @@
 package br.com.fdp2.main;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 
 import br.com.fdp2.dao.UsuarioDao;
 import br.com.fdp2.domain.Usuario;
 
+
+@RunWith(SpringJUnit4ClassRunner.class)//informa que o springRunner ira rodar os testes
+@ContextConfiguration(locations="file:src/main/resources/META-INF/springbeans.xml")	//aponta para o arquivo de configuração
+@TransactionConfiguration(transactionManager="transactionManager")//informa o aquivo de gerenciamento de trasação
 public class TestUsuarioDao2 {
 
-	EntityManager manager;
-	ClassPathXmlApplicationContext ctx;
-
-	/**
-	 * inicializa a instancia antes dos testes
-	 */
-	@Before
-	public void init() {
-		ctx = new ClassPathXmlApplicationContext("file:src/main/resources/META-INF/springbeans.xml");
-		EntityManagerFactory em = (EntityManagerFactory) ctx.getBean("entityManagerFactory");
-		manager = em.createEntityManager();
-
-	}
-
-	/**
-	 * libera a instancia quando nao for mais usada
-	 */
-	@After
-	public void finaliza() {
-		ctx.close();
-	}
-
+	@Autowired
+	UsuarioDao dao;
+	
 	@Test
-	@Ignore
+	//@Ignore
 	public void salvar() {
 		Usuario usu = new Usuario();
-		usu.setNome("Aline");
-		usu.setEmail("aaa@gmail.com");
-		usu.setSenha("alinezinha");
-		UsuarioDao dao = new UsuarioDao(manager);
+		usu.setNome("Eniexe");
+		usu.setEmail("NANa@gmail.com");
+		usu.setSenha("enen");
 		dao.cadastrar(usu);
 		// manager.persist(usu);
 
@@ -55,7 +38,6 @@ public class TestUsuarioDao2 {
 	public void buscarPorId() {
 		Usuario usu = new Usuario();
 		usu.setId(3);
-		UsuarioDao dao = new UsuarioDao(manager);
 		Usuario usuBusado = dao.buscarPorId(usu.getId());
 		Assert.assertNotEquals(usuBusado, usuBusado);
 		// System.out.println(dao.buscarPorId(usu.getId()));
@@ -66,14 +48,13 @@ public class TestUsuarioDao2 {
 	@Ignore
 	public void excluir() {
 		Usuario usuSalvo = new Usuario("test", "test", "test");
-		UsuarioDao dao = new UsuarioDao(manager);
 		dao.excluir(usuSalvo);
 		Assert.assertEquals(usuSalvo, null);
 	}
 
 	@Test
+	@Ignore
 	public void buscarTodos() {
-		UsuarioDao dao = new UsuarioDao(manager);
 		for (Usuario usu : dao.buscarTodos()) {
 			//System.out.println(usu.toString());
 			//Assert.assertTrue(usu!=null);
